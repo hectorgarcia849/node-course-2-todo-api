@@ -1,6 +1,7 @@
 //external modules
 var express = require('express');
 var bodyParser = require('body-parser');
+var {ObjectID} = require('mongodb');
 
 //local modules
 var {mongoose} = require('./db/mongoose');
@@ -33,6 +34,22 @@ app.get('/todos', (req, res) => {
             res.send({todos}); //sending back an object as opposed to an array makes things more flexible
         }, (e) => {
             res.status(400).send(e);
+        });
+});
+
+app.get('/todos/:id', (req, res) => {
+    var id = req.params.id;
+    if(!ObjectID.isValid(id)){
+        return res.status(404).send();
+    }
+    Todo.findById(id).then(
+        (todo) => {
+            if(!todo){
+                return res.status(404).send(); //object id is valid but not in the collection
+            }
+            res.send({todo});},
+        (e) => {
+            res.status(400).send()
         });
 });
 
