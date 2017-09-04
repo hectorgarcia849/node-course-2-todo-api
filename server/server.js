@@ -10,6 +10,7 @@ var {User} = require('./models/user');
 
 //start configuring express
 var app = express();
+const port = process.env.PORT || 3000;
 
 //middle-ware
 app.use(bodyParser.json()); //allows us to send jsons through requests to our express application
@@ -55,8 +56,8 @@ app.get('/todos/:id', (req, res) => {
 
 
 //create localhost for express application
-app.listen(3000, () => {
-    console.log('Started on port 3000')
+app.listen(port, () => {
+    console.log(`Started on port ${port}`)
 });
 
 module.exports = {app};
