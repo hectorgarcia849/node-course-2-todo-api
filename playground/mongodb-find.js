@@ -18,11 +18,28 @@ MongoClient.connect('mongodb://localhost:27017/ToDoApp', (err, db) => {
     //     console.log(`Todos count: ${count}`);
     // }).catch((err) => console.log('Unable to fetch todos', err)); //find() gets a Cursor object which is essentially a pointer to the db
 
+    // db.collection('Todos')
+    //     .find({text: "Something to do"})
+    //     .toArray()
+    //     .then((docs) => console.log(docs))
+    //     .catch((err)=> console.log('Unable to fetch todos', err));
+
+
+    //deleteMany
+    // db.collection('Todos')
+    //     .deleteMany({text: 'Eat Lunch'})
+    //     .then((result) => console.log(result));
+    // //deleteOne, deletes first item that meets the criteria
     db.collection('Todos')
-        .find({text: "Something to do"})
-        .toArray()
-        .then((docs) => console.log(docs))
-        .catch((err)=> console.log('Unable to fetch todos', err));
+        .deleteOne({text: "Something to do"})
+        .then((result) => console.log(result));
+
+
+    //findOneAndDelete, return the object that will be deleted then delete it
+    db.collection('Todos')
+        .findOneAndDelete({text: "Something else"})
+        .then((result) => console.log(result, result.documents));
+
 
     //db.close();
 });
