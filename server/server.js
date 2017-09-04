@@ -27,6 +27,14 @@ app.post('/todos', (req, res) =>{
         });
 });
 
+app.get('/todos', (req, res) => {
+    Todo.find()
+        .then((todos) => {
+            res.send({todos}); //sending back an object as opposed to an array makes things more flexible
+        }, (e) => {
+            res.status(400).send(e);
+        });
+});
 
 
 //create localhost for express application
