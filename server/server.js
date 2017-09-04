@@ -34,25 +34,4 @@ app.listen(3000, () => {
     console.log('Started on port 3000')
 });
 
-
-//mongoose model for storing data
-
-
-// var newTodo = new Todo({
-//     text: 'Cook dinner',
-//     completed: true,
-//     completedAt: new Date().getMilliseconds()
-// });
-//
-// newTodo.save() //saves to database and returns a promise
-//     .then((doc) => { console.log('Saved:', doc)})
-//     .catch((err) => console.log('Unable to save'));
-
-
-var newUser = new User({
-    email: 'hectorgarcia849@gmail.com'
-});
-
-newUser.save()
-    .then((doc) => console.log('Saved User: ', doc))
-    .catch((err) => console.log('Unable to save', err));
+module.exports = {app};
