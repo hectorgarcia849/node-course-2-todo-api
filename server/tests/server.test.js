@@ -1,4 +1,4 @@
-const expect = require('expect');
+const expect = require('expect'); //this is now jest
 const request = require('supertest');
 const {ObjectID} = require('mongodb');
 
@@ -6,9 +6,9 @@ const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 
 
-const todos = [{_id: new ObjectID(), text: "First test todo"}, {_id: new ObjectID(), text: "Second test todo"}];
+const todos = [{_id: new ObjectID(), text: "First test todo"}, {_id: new ObjectID(), text: "Second test todo", completed: true, completedAt: new Date().getTime()}];
 
-beforeEach((done) => {
+beforeEach((done) => { //adds the todos for each test, but when test is done clears the database
     Todo.remove({})
         .then(() => Todo.insertMany(todos))
         .then(() => done())
@@ -132,5 +132,55 @@ describe('DELETE /todos/:id', () => {
             .end(done);
     });
 });
+
+describe('PATCH /todos/:id', () => {
+    it('should update todo', (done) => {
+        //grab id of first item
+        var id = todos[0]._id.toHexString();
+        var text = "New text data";
+
+        //update text, set completed true
+        request(app)
+            .patch(`/todos/${id}`)
+            .send({text, completed: true, completedAt: new Date().getTime()})
+            .expect(200)
+            .end((err, res) => {
+                if(err){
+                    res.expect(400);
+                    return done(err);
+                }
+                //in the response we check for the changes: text is changed, completed is true, completedAt is a number
+                expect(res.body.todo.text).toEqual(text);
+                expect(res.body.todo.completed).toBe(true);
+                expect(typeof res.body.todo.completedAt === 'number').toBe(true);
+                done();
+            });
+    });
+
+    it('should clear completedAt when todo is not completed', (done) => {
+        var id = todos[1]._id.toHexString();
+        var text = "New text data";
+
+        //update todo, update text and set completed to false
+        request(app)
+            .patch(`/todos/${id}`)
+            .send({completed: false, text})
+            .expect(200)
+            .end((err, res) =>{
+                if(err) {
+                    res.expect(400);
+                    return done(err);
+                }
+            //in the response we check for the changes: text is changed, completed is false, completedAt is null
+                expect(res.body.todo.text).toEqual(text);
+                expect(res.body.todo.completed).toBe(false);
+                expect(res.body.todo.completedAt).toBe(null);
+                done();
+            });
+
+    });
+
+});
+
 
 
