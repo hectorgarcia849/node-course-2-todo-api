@@ -63,11 +63,11 @@ app.delete('/todos/:id', (req, res) => {
 
     Todo.findByIdAndRemove(id)
         .then(
-            (doc) => {
-                if (!doc) { //if we get no response check is necessary because a valid id that is not found will just return a null doc
+            (todo) => {
+                if (!todo) { //if we get no response check is necessary because a valid id that is not found will just return a null doc
                   res.status(404).send();
                 }
-                res.status(200).send(doc);
+                res.status(200).send({todo});
         })
         .catch(
             (e) => {
