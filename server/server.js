@@ -1,3 +1,5 @@
+require('./config/config');
+
 //external modules
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -6,9 +8,9 @@ const _ = require('lodash');
 
 
 //local modules
-var {mongoose} = require('./db/mongoose');
-var {Todo} = require('./models/todo');
-var {User} = require('./models/user');
+const {mongoose} = require('./db/mongoose');
+const {Todo} = require('./models/todo');
+const {User} = require('./models/user');
 
 //start configuring express
 var app = express();
