@@ -1,7 +1,9 @@
 //external modules
-var express = require('express');
-var bodyParser = require('body-parser');
-var {ObjectID} = require('mongodb');
+const express = require('express');
+const bodyParser = require('body-parser');
+const {ObjectID} = require('mongodb');
+const _ = require('lodash');
+
 
 //local modules
 var {mongoose} = require('./db/mongoose');
@@ -73,6 +75,38 @@ app.delete('/todos/:id', (req, res) => {
             (e) => {
                 res.status(400).send();
             });
+});
+
+//patch route is used to update todo items
+
+app.patch('/todos/:id', (req, res) => {
+    var id = req.params.id;
+    var body = _.pick(req.body, ['text', 'completed']); //using lodash, takes an array of properties you want to pull off from the body, this is for security.  It ensures users can only update text and complete
+
+    //checks if valid id
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    //given id is valid, checks body from req object if completed is type boolean (i.e. not null) and if it is true, if so, set completedAt else set completed to false.
+    if(_.isBoolean(body.completed) && body.completed) { //if completed is a boolean and completed
+        body.completedAt = new Date().getTime();
+    } else {
+        //if not a boolean and not true
+        body.completed = false;
+        body.completedAt = null;
+    }
+
+    //With body updated, now can update db
+    Todo.findByIdAndUpdate(id, {$set:body}, {new: true}).then((todo) => { //$set is a mongoDB operator, new set to true ensures we get the updated document back
+            if(!todo) {
+                return res.status(404).send();
+            }
+            res.send({todo});
+        }).catch((e) => {
+            res.status(400).send();
+    });
+
 });
 
 
