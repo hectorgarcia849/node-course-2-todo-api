@@ -54,6 +54,28 @@ app.get('/todos/:id', (req, res) => {
         });
 });
 
+app.delete('/todos/:id', (req, res) => {
+    var id = req.params.id;
+
+    if (!ObjectID.isValid(id)) {
+        res.status(404).send();
+    }
+
+    Todo.findByIdAndRemove(id)
+        .then(
+            (doc) => {
+                if (!doc) { //if we get no response check is necessary because a valid id that is not found will just return a null doc
+                  res.status(404).send();
+                }
+                res.status(200).send(doc);
+        })
+        .catch(
+            (e) => {
+                res.status(400).send();
+            });
+});
+
+
 
 //create localhost for express application
 
