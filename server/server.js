@@ -56,8 +56,9 @@ app.get('/todos/:id', (req, res) => {
 
 
 //create localhost for express application
+
 app.listen(port, () => {
-    console.log(`Started on port ${port}`)
+    console.log(`Started up at port ${port}`);
 });
 
 module.exports = {app};
