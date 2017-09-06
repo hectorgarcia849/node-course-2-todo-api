@@ -131,6 +131,20 @@ app.get('/users/me', authenticate, (req, res) => {
     res.send(req.user); //req.user gets decoded by authenticate middleware
 });
 
+app.post('/users/login', (req, res) => {
+    var body = _.pick(req.body, ['email', 'password']);
+    User.findByCredentials(body.email, body.password).then((user) => {
+        res.send(user);
+        user.generateAuthToken().then((token) => {
+            res.header('x-auth', token).send(user);
+        });
+    }).catch((e) => {
+        res.status(400).send();
+    });
+
+});
+
+
 //create localhost for express application
 
 app.listen(port, () => {

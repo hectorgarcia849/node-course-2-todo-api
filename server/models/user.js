@@ -66,6 +66,25 @@ UserSchema.statics.findByToken = function(token){
     return User.findOne({'_id':decoded._id, 'tokens.token': token, 'tokens.access': 'auth'});
 };
 
+UserSchema.statics.findByCredentials = function(email, password) {
+    var User = this;
+    return User.findOne({email}).then((user) => {
+       if(!user){
+           return Promise.reject();
+       }
+
+       return new Promise((resolve, reject) => {
+           bcrypt.compare(password, user.password, (err, res) => {
+               if(res){
+                   resolve(user);
+               } else {
+                   reject();
+               }
+           });
+       });
+    });
+}
+
 UserSchema.pre('save', function (next) { //pre runs code before an event, in this case we are defining code to run before the save event if the password is modified
     var user = this;
 
