@@ -53,6 +53,17 @@ UserSchema.methods.toJSON = function() { //overrides the default toJSON method t
     return _.pick(userObject, ['_id', 'email']);
 };
 
+UserSchema.methods.removeToken = function(token) {
+    var user = this;
+    return user.update({
+        $pull: { //mongoose operator to remove item from array in the model
+            tokens: {
+                token: token
+            }
+        }
+    });
+};
+
 UserSchema.statics.findByToken = function(token){
     var User = this; //model method
     var decoded;
