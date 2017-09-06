@@ -28,17 +28,32 @@
 // }
 //
 
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
+//
+// jwt.sign
+// jwt.verify
+//
+// var data = {
+//     id: 10
+// }
+// //token produced is made up of : header.paylod.signature (salt secret)
+//
+// var token = jwt.sign(data, '123abc'); //second parameter is the salt, sign method generates token
+// console.log(token);
+// var decoded = jwt.verify(token, '123abc');
+// console.log(decoded);
 
-jwt.sign
-jwt.verify
+const bcrypt = require('bcryptjs');
+var password = '123abc!'
 
-var data = {
-    id: 10
-}
-//token produced is made up of : header.paylod.signature (salt secret)
+// bcrypt.genSalt(10, (err, salt) => { //10 sec per hashing
+//     bcrypt.hash(password, salt, (err, hash) => {
+//         console.log(hash);
+//     });
+// });
 
-var token = jwt.sign(data, '123abc'); //second parameter is the salt, sign method generates token
-console.log(token);
-var decoded = jwt.verify(token, '123abc');
-console.log(decoded);
+var hashedPassword = '$2a$10$9l6JmW84EZXFgS2vZXYyqOp7yDRl2I1s0G.YWv.lWrMxfsGkOvU3.'
+
+bcrypt.compare(password, hashedPassword, (err, res) => {
+    console.log(res);
+});
