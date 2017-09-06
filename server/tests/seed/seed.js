@@ -16,13 +16,17 @@ const users = [{
     {
         _id: userTwoId,
         email: 'hektor@example.com',
-        password:'user2pass'
+        password:'user2pass',
+        tokens: [{
+            access: 'auth',
+            token: jwt.sign({_id: userTwoId, access: 'auth'}, 'abc123').toString()
+        }]
     }
 ];
 
 const todos = [
-    {_id: new ObjectID(), text: "First test todo"},
-    {_id: new ObjectID(), text: "Second test todo", completed: true, completedAt: new Date().getTime()}];
+    {_id: new ObjectID(), text: "First test todo", _creator: userOneId},
+    {_id: new ObjectID(), text: "Second test todo", completed: true, completedAt: new Date().getTime(), _creator: userTwoId}];
 
 const populateTodos = (done) => { //adds the todos for each test, but when test is done clears the database
     Todo.remove({})

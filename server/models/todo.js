@@ -15,6 +15,10 @@ var Todo = mongoose.model('Todo',
         completedAt: { //only filled if completed, we should expected completedAt to be null on creation
             type: Number,
             default: null
+        },
+        _creator: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true
         }
     }
 );
